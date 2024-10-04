@@ -1,10 +1,10 @@
 ---
 layout: default
-title: CGAL
+title: Modern C++
 parent: References
 ---
 
-The Computational Geometry Algorithms Library (CGAL)
+Modern C++
 ===
 {: .no_toc }
 

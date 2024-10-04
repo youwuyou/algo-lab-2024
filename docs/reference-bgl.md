@@ -6,7 +6,6 @@ parent: References
 
 The Boost Graph Library (BGL)
 ===
-
 {: .no_toc }
 
 <details open markdown="block">
