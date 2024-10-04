@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-docker-image:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check Docker image
+      id: check-image
+      run: |
+        DOCKERHUB_REPO="youwuyou/ginkgo_installed"
+        DOCKERHUB_TAG="latest"
+
+        API_URL="https://hub.docker.com/v2/repositories/${DOCKERHUB_REPO}/tags/${DOCKERHUB_TAG}"
+
+        STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${API_URL}")
+
+        if [ $STATUS_CODE -eq 200 ]; then
+          echo "Docker image ${DOCKERHUB_REPO}:${DOCKERHUB_TAG} exists on Docker Hub."
+        else
+          echo "Docker image ${DOCKERHUB_REPO}:${DOCKERHUB_TAG} does not exist on Docker Hub."
+          exit 1
+        fi
+      env:
+        DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_REPO }}
+        DOCKERHUB_TAG: ${{ secrets.DOCKERHUB_TAG }}
+
+    - name: Set up Docker
+      uses: actions/checkout@v2
+
+    - name: Build C++ project and testing
+      run: |
+        DOCKERHUB_REPO="youwuyou/ginkgo_installed"
+        DOCKERHUB_TAG="latest"
+        docker run -v ${{ github.workspace }}:/workspace ${DOCKERHUB_REPO}:${DOCKERHUB_TAG} bash -c "cd /workspace && mkdir -p build && cd build && cmake -GNinja .. && ninja && ctest -V"

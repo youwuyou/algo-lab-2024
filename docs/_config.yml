@@ -1,0 +1,32 @@
+title: AlgoLab 2024 @ ETHZ
+description: Solutions to the exercises of the AlgoLab 2024 course at ETH Zurich.
+theme: just-the-docs
+nav_enabled: true
+
+# Set the baseurl properly
+baseurl: "/algo-lab-2024"  # Base URL for the site
+
+# For copy button on code
+enable_copy_code_button: true
+
+aux_links:
+  Code Repository: https://github.com/youwuyou/algo-lab-2024
+
+math: katex # render math with KaTeX
+
+callouts_level: quiet # or loud
+callouts:
+  highlight:
+    color: yellow
+  important:
+    title: Important
+    color: blue
+  new:
+    title: New
+    color: green
+  note:
+    title: Note
+    color: purple
+  warning:
+    title: Warning
+    color: red
