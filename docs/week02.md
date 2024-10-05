@@ -29,11 +29,6 @@ Week 02: Dynamic Programming
   </summary>
   {: .text-delta }
   - We have the total number `n` and the coordinates of the parasols, where coordinates are also integers (positive & negative) relative to the origin (the parking lot).
-
-
-  *Optimality of the location `x`*
-  - A location x on the beach can only have integer coordinates and is optimal if the number of parasols within 100m of it (i.e. with coordinates in `[x − 100, x + 100]`) is maximal with respect to all other locations on the beach. 
-    - If many locations maximize the number of parasols we only want those such that the distance to the farthest parasol at most 100m away is minimized.
 {:toc}
 </details>
 
@@ -47,6 +42,12 @@ Week 02: Dynamic Programming
   - 2nd line with coordinates of all possible optimal locations, sorted from low to high
 {:toc}
 </details>
+
+
+
+  *Optimality of the location `x`*
+  - A location x on the beach can only have integer coordinates and is optimal if the number of parasols within 100m of it (i.e. with coordinates in `[x − 100, x + 100]`) is maximal with respect to all other locations on the beach. 
+    - If many locations maximize the number of parasols we only want those such that the distance to the farthest parasol at most 100m away is minimized.
 
 ## Solution Technique
 

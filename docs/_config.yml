@@ -18,8 +18,8 @@ callouts_level: quiet # or loud
 callouts:
   highlight:
     color: yellow
-  important:
-    title: Important
+  def:
+    title: Definition
     color: blue
   new:
     title: New
