@@ -38,3 +38,12 @@ One cycle, starts with $$p_{0}$$, ends with $$p_{m-1}$$
 
 The cycle starts with $$p_{0}$$ again and repeats until no coins left.
 
+# First steps with BGL
+
+
+# Buddy Selection 	
+
+
+# Ant Challenge 	
+
+# Important Bridges
