@@ -49,13 +49,11 @@ Specific containers from the STL can be used to configure the underlying structu
 | `multisetS` | `std::multiset` |
 | `hash_setS` | `boost::unordered_set` |
 
-
 # Graph
 
-## Representation
-We represernt a graph $$G = (V, E)$$ as an `adjacency_list`. $$G$$ has `n` vertices and `m` edges.
-- Space $$O(n + m)$$
+We represernt a graph $$G = (V, E)$$ as an `adjacency_list`. $$G$$ has `n` vertices and `m` edges. The space complexity is $$O(n + m)$$.
 
+## Unweighted, Undirected Graph
 
 ```cpp
 #include <boost/graph/adjacency_list.hpp>
@@ -63,50 +61,26 @@ typedef boost::adjacency_list<boost::vecS,
                               boost::vecS,
                               boost::undirectedS
                               > graph;
-
-// Initialize graph with 5 vertices {0,.., 4}
-graph G(5);
-// Add an edge in the undirected & unweighted graph `G`
-boost::add_edge(0, 1, G);
-// Warning! This extends the list of vertices to {0,..., 7}
-boost::add_edge(0, 7, G);
+graph G(5);               // Initialize graph with 5 vertices {0,.., 4}
+boost::add_edge(0, 1, G); // Add an edge in the undirected & unweighted graph `G`
+boost::add_edge(0, 7, G); // Warning! This extends the list of vertices to {0,..., 7}
 ```
 
-
-### Getting Graph Information
+## Unweighted, Directed Graph
 
 ```cpp
-int n = boost::num_vertices(G);
+typedef boost::adjacency_list<boost::vecS,
+                              boost::vecS,
+                              boost::directedS
+                              > directed_graph;
 ```
 
-
-
-### Iterating Over Edges
-- with the definition of `graph` using the `boost::adjacency_list` as above
-- to unpack the iterators, one could use `boost::tie(e_beg, e_end)  = boost::edges(G)` or `std::tie` (C++11) instead.
+## Weighted, Undirected Graph
 
 ```cpp
-typedef boost::graph_traits<graph>::edge_iterator edge_it;
-
-// iterate over edges in provided undirected graph
-edge_it e_beg, e_end;
-for (auto [e_beg, e_end] = boost::edges(G); e_beg != e_end; ++e_beg){
-      std::cout << boost::source(*e_beg, G) << " "
-                << boost::target(*e_beg, G) << '\n';
-}
-```
-
-
-## Path reconstruction
-
-## Directed & Undirected Graph
-
-
-## Weighted Graph
-
-For an undirected graph
-```cpp
-typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS,
+typedef boost::adjacency_list<boost::vecS, 
+                              boost::vecS, 
+                              boost::undirectedS,
                               boost::no_property,
                               boost::property<boost::edge_weight_t, int>
                               > weighted_graph;
@@ -120,4 +94,54 @@ weight_map weights = boost::get(boost::edge_weight, G);
 // add an edge {0, 1} and set weight to 3
 const edge_desc edge = boost::add_edge(0, 1, G).first;
 weights[edge] = 3;
+```
+
+## Weighted, Directed Graph
+
+```cpp
+typedef boost::adjacency_list<boost::vecS, 
+                              boost::vecS, 
+                              boost::directedS,
+                              boost::no_property,
+                              boost::property<boost::edge_weight_t, int>
+                              > weighted_directed_graph;
+```
+
+{: .note }
+We used default `boost::no_property` here. One can also use other BGL predefined vertex and edge [boost::property](https://www.boost.org/doc/libs/1_86_0/libs/graph/doc/property.html) to attach additional properties to the graph. Note that all property maps must be initialized and maintained manually!
+
+
+## Getting Graph Information
+
+```cpp
+int n = boost::num_vertices(G);
+```
+
+### Iterating Over Edges
+- with the definition of `graph` using the `boost::adjacency_list` as above
+- to unpack the iterators, one could use `boost::tie(e_beg, e_end)  = boost::edges(G)` or `std::tie` (C++11) instead.
+
+#### All Edges:
+
+```cpp
+typedef boost::graph_traits<graph>::edge_iterator edge_it;
+// iterate over edges in provided undirected graph
+edge_it e_beg, e_end;
+for (auto [e_beg, e_end] = boost::edges(G); e_beg != e_end; ++e_beg){
+      std::cout << boost::source(*e_beg, G) << " "
+                << boost::target(*e_beg, G) << '\n';
+}
+```
+
+#### Neighbors of a Vertex:
+- the difference lies in the type of the iterator
+
+```cpp
+typedef boost::graph_traits<graph>::out_edge_iterator out_edge_it;
+// for `G` undirected, `out_edges` is all incident edges
+out_edge_it oe_beg, oe_end;
+for (auto [oe_beg, oe_end] = boost::out_edges(0,G); oe_beg != oe_end; ++oe_beg){
+  assert(boost::source(*oe_beg, G) == 0);
+  std::cout << boost::target(*oe_beg, G) << '\n';
+}
 ```

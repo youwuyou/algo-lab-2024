@@ -33,21 +33,24 @@ Common Graph Problems
 - **Output:** distance between $$s$$ and $$t$$
 
 ### `boost::dijkstra_shortest_paths`
-- using the [`weighted_graph`](./reference-bgl.html#weighted-graph)
+- using the weighted undirected [`weighted_graph`](./reference-bgl.html#weighted-undirected-graph) or directed graph [`weighted_directed_graph`](./reference-bgl.html#weighted-directed-graph)
 
 ```cpp
 #include <boost/graph/dijkstra_shortest_paths.hpp>
+
 // Time complexity O(V log V + E)
-int dijkstra_dist(const weighted_graph& G, int s, int t){
+int dijkstra_dist(const weighted_graph& G, int s, int t) {
   int n = boost::num_vertices(G);
   std::vector<int> dist_map(n);  // external property
+
   // apply Dijkstra's algorithm
-  boost::dijkstra_shortest_paths(G, s,
+  boost::dijkstra_shortest_paths(
+      G, s,
       boost::distance_map(
-        boost::make_iterator_property_map(dist_map.begin(),
-                                          boost::get(boost::vertex_index, G))
-      )
+          boost::make_iterator_property_map(
+              dist_map.begin(), boost::get(boost::vertex_index, G)))
   );
+
   return dist_map[t];
 }
 ```
@@ -57,6 +60,41 @@ One can extract useful information from the distance map
 // distance of node 0 to the furthest
 int d = *std::max_element(std::begin(dist_map), std::end(dist_map));
 ```
+
+### Reconstructing the Path
+
+Additional to `dist_map` recording distances from source node to other nodes in the graph, we need to keep track of the predecessor list.
+
+>  *"for each vertex u in V, `p[u]` will be the predecessor of u in the shortest paths tree (unless `p[u] = u`, in which case u is either the source or a vertex unreachable from the source)."*
+
+```cpp
+// Given some weigthed graph `G`
+int n = boost::num_vertices(G);
+std::vector<int> dist_map(n);
+std::vector<vertex_desc> pred_map(n); // for recording predecessors
+// apply Dijkstra's algorithm
+int s = 0; // source node `0`
+boost::dijkstra_shortest_paths(G, s,
+  boost::distance_map(
+    boost::make_iterator_property_map(dist_map.begin(),
+                      boost::get(boost::vertex_index, G))
+  ).predecessor_map(
+    boost::make_iterator_property_map(pred_map.begin(),
+                      boost::get(boost::vertex_index, G))
+  )
+);
+// Reconstruct path from source `s` to `t`
+int t = 3; // destination node `3`
+std::vector<vertex_desc> path;
+path.clear(); path.push_back(t);
+while (s != t){
+  t = pred_map[t]; // set the end to its predecessor
+  path.push_back(t);
+}
+std::reverse(path.begin(), path.end());
+```
+
+
 
 ## using Bellman-Ford Algorithm
 - with negative weights
@@ -77,8 +115,8 @@ An acyclic subgraph of $$G$$ connecting all vertices in $$V$$ and having the min
 - **Note:** works with negative weights
 
 
-### `boost::krusal_minimum_spanning_tree`
-- using the [`weighted_graph`](./reference-bgl.html#weighted-graph)
+### `boost::kruskal_minimum_spanning_tree`
+- using the weighted, undirected graph [`weighted_graph`](./reference-bgl.html#weighted-undirected-graph)
 
 ```cpp
 #include <boost/graph/kruskal_min_spanning_tree.hpp>
@@ -96,19 +134,122 @@ void kruskal(const weighted_graph& G){
 
 
 # Maximum matching
-- using Edmond’s Algorithm
+
+A **matching** in a graph is a set of edges where no two of which share an endpoint, formally:
+
+{: .def}
+A set of edges $$M ⊆ E(G)$$ in a graph $$G$$ is called a **matching** if $$e ∩ e' = \empty$$ for any pair of edges $$e, e' \in M$$.
+
+---
+
+If a matching $$M$$ cannot be appended with more edges, without violating the constraint that it remains a matching, it is a **maximal matching**.
+
+{: .def}
+  A **maximal matching** is a matching $$M$$ of a graph $$G$$ that is not a subset of any other matching.
+
+---
+**Maximum matching** is also known as maximum-cardinality matching, and is a matching that contains the largest possible number of edges. There may be many maximum matchings.
+
+{: .def}
+  A matching $$M$$ is said to be **maximum** if for any other matching $$M'$$, $$\lvert M \rvert \geq \lvert M' \rvert $$
+
+{: .warning}
+Greedy algorithms may fail. Every maximum matching is maximal, but not every maximal matching is a maximum matching.
+
+---
+Another concept is the **perfect matching**, a matching is perfect if it covers all vertices of a graph.
+
+{: .def}
+  A matching is perfect if $$\lvert M \rvert = \frac{\lvert V(G) \rvert}{2} $$
+
+
+
+
+## using Edmond’s Algorithm
+- **Input:** an unweighted, undirected graph $$G = (V, E)$$
+- **Output:** a set of edges $$M ⊆ E$$ such that $$\lvert M \rvert$$ is maximum and no two edges in $$M$$ share any endpoint.
+
+### `boost::edmonds_maximum_cardinality_matching`
+- using the unweighted, undirected graph [`graph`](./reference-bgl.html#unweighted-undirected-graph)
+
+```cpp
+#include <boost/graph/max_cardinality_matching.hpp>
+
+void maximum_matching(const graph& G) {
+  int n = boost::num_vertices(G);
+  std::vector<vertex_desc> mate_map(n); // exterior property map
+  const vertex_desc NULL_VERTEX = boost::graph_traits<graph>::null_vertex();
+  // O(mn ɑ(m,n)), where ɑ(m,n) <= 4
+  boost::edmonds_maximum_cardinality_matching(
+      G, boost::make_iterator_property_map(mate_map.begin(),
+      boost::get(boost::vertex_index, G)));
+
+  int matching_size = boost::matching_size(G,
+      boost::make_iterator_property_map(mate_map.begin(),
+      boost::get(boost::vertex_index, G)));
+
+  for (int i = 0; i < n; ++i) {
+    if (mate_map[i] != NULL_VERTEX && i < mate_map[i]) {
+      std::cout << " " << mate_map[i] << '\n';
+    }
+  }
+}
+```
+
+
 
 # Strongly connected components
-- using Tarjan’s Algorithm
 
+{: .def}
+  A **strongly connected component** of a directed graph $$G = (V, E)$$ is any maximal subset of vertices $$C ⊆ V$$ such that all vertices in $$C$$ are pairwise reachable.
+
+## using Tarjan’s Algorithm
+- **Input:** a directed, unweighted graph $$G = (V, E)$$
+- **Output:** the number of strongly connected components in $$G$$.
+- **Note:** Tarjan's algorithm is based on DFS
+
+### `boost::strong_components`
+- using the unweighted, directed graph [`directed_graph`](./reference-bgl.html#unweighted-directed-graph)
+
+```cpp
+#include <boost/graph/strong_components.hpp>
+void strong_connected_comp(const graph &G){
+  int n = boost::num_vertices(G);
+  std::vector<int> scc_map(n); // exterior property map
+  // Tarjan's Algorithm O(V+E)
+  int nscc = boost::strong_components(G,
+      boost::make_iterator_property_map(scc_map.begin(),
+      boost::get(boost::vertex_index, G)
+      )
+  );
+  std::cout << "Index of SCC current vertex belongs to: " << nscc << '\n';
+  for (int i = 0; i < n; ++i){
+    std::cout << i << " " << scc_map[i] << '\n';
+  }
+}
+```
 
 # Connected components
 
+{: .def}
+A **connected components** of a undirected graph $$G = (V, E)$$ is any maximal subset of vertices $$C⊆V$$ such that all vertices in $$C$$ are pairwise reachable.
+
 # Biconnected components
+
+{: .def}
+A **biconnected graph** is an undirected graph that is connected, and remains connected even if a vertex is removed.
+
+{: .def}
+A **biconnected component** is any maximal subgraph of $$G$$ that is biconnected.
 
 # Articulation Points
 
+{: .def}
+An **articulation point** of an undirected graph is any vertex part of two or more biconnected components
+
 # Bipartite Graph
+{: .def}
+A graph $$G = (V,E)$$ is **bipartite** if $$V$$ can be split in two subsets $$U, V$$ such that all edges in $$E$$ have an extremity in each.
 
 
 
