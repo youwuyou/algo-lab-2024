@@ -97,7 +97,7 @@ We have total number of `n` coins, each associated with a positive integer value
 </details>
 
 
-## Problem Features
+## Problem Modeling
 
 ![](assets/images/burning_coin_decision_tree.png)
 

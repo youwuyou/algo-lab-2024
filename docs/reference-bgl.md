@@ -53,6 +53,7 @@ Specific containers from the STL can be used to configure the underlying structu
 
 We represernt a graph $$G = (V, E)$$ as an `adjacency_list`. $$G$$ has `n` vertices and `m` edges. The space complexity is $$O(n + m)$$.
 
+
 ## Unweighted, Undirected Graph
 
 ```cpp
@@ -87,7 +88,7 @@ typedef boost::adjacency_list<boost::vecS,
 typedef boost::graph_traits<weighted_graph>::edge_iterator edge_it;      // edge iterator
 typedef boost::graph_traits<weighted_graph>::edge_descriptor edge_desc;  // edge descriptor
 
-typedef boost::property_map<graph, boost::edge_weight_t>::type weight_map; // weight map
+typedef boost::property_map<weighted_graph, boost::edge_weight_t>::type weight_map; // weight map
 // initialize the graph with vertex count `n`, obtain empty weight map
 weighted_graph G(5);
 weight_map weights = boost::get(boost::edge_weight, G);

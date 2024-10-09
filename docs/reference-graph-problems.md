@@ -24,9 +24,27 @@ Common Graph Problems
 {: .def }
  A shortest path is any path whose path weight is equal to the shortest path weight.
 
-## using Breadth-First Search
+## using Breadth-First Search (BFS)
 - when all edge weights are equal to one.
 
+### `boost::breadth_first_search`
+- using the unweighted, directed graph [`directed_graph`](./reference-bgl.html#unweighted-directed-graph)
+
+```cpp
+#include <boost/graph/breadth_first_search.hpp>
+
+typedef boost::default_color_type color;
+const color black = boost::color_traits<color>::black(); // visited by BFS
+const color white = boost::color_traits<color>::white(); // not visited by BFS
+
+int n = boost::num_vertices(G);
+std::vector<color> vertex_color(n); // exterior property map
+
+boost::breadth_first_search(G, s, boost::color_map(boost::make_iterator_property_map(vertex_color.begin(), boost::get(boost::vertex_index, G))));
+
+// Check if some source vertex `s` can reach every vertex
+bool can_reach_all = (std::find(vertex_color.begin(), vertex_color.end(), white) == vertex_color.end());
+```
 
 ## using Dijkstra’s Algorithm
 - **Input:** a weighted, directed or undirected graph $$G = (V, E)$$, vertices $$s,t \in V$$, where all edge weights are **nonnegative**.
@@ -169,11 +187,12 @@ Another concept is the **perfect matching**, a matching is perfect if it covers 
 - **Input:** an unweighted, undirected graph $$G = (V, E)$$
 - **Output:** a set of edges $$M ⊆ E$$ such that $$\lvert M \rvert$$ is maximum and no two edges in $$M$$ share any endpoint.
 
-### `boost::edmonds_maximum_cardinality_matching`
+### [`boost::edmonds_maximum_cardinality_matching`](https://www.boost.org/doc/libs/1_76_0/libs/graph/doc/maximum_matching.html)
 - using the unweighted, undirected graph [`graph`](./reference-bgl.html#unweighted-undirected-graph)
 
 ```cpp
 #include <boost/graph/max_cardinality_matching.hpp>
+typedef boost::graph_traits<graph>::vertex_descriptor vertex_desc;
 
 void maximum_matching(const graph& G) {
   int n = boost::num_vertices(G);

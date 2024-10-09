@@ -78,6 +78,12 @@ The cycle starts with $$p_{0}$$ again and repeats until no coins left.
   </summary>
   {: .text-delta }
 
+- 1st line contains three integers `n [space] c [space] f`
+  - `n` no. of students, an even number
+  - `c` no. characteristics per students
+  - `f` current maximum threshold of characteristics found over all pairs of students
+
+- n lines describing characteristics of students, each line consists of `c` characteristics (`std::string`) per student
 {:toc}
 </details>
 
@@ -88,8 +94,30 @@ The cycle starts with $$p_{0}$$ again and repeats until no coins left.
   </summary>
   {: .text-delta }
 
+- single line determining if there is an assignment such that every pair shares more than `f` characteristics.
+  - `optimal` 
+  - `not optimal`
 {:toc}
 </details>
+
+
+## Problem Modeling
+
+We can use an unweighted, undirected graph [`graph`](./reference-bgl.html#unweighted-undirected-graph) to model the problem.
+
+Every student is a vertex, and there is an edge between student `u` and `v` if and only if the number of common interests between them is strictly larger than the threshold `f` to be compared with.
+
+An assignment for all students without leaving anyone alone is always possible because we have a one-to-one matching between students and the total number of students `n` is guaranteed to be an even number. A valid assignment $$M$$ is a set of edges where each vertex is contained in exactly one edge. An example of such matching $$M = \{ \{0, 5\}, \{1, 3\}, \{2, 4\} \}$$ is shown below.
+
+<img src="assets/images/buddy_selection_maximum_cardinality.png" width="65%">
+
+
+
+## Solution Technique
+
+An essential step for the graph construction consists of checking no. common interests between students, for this we need to perform pairwise comparisons between every student `i` and `j`. To do this efficiently, we can employ sliding window technique on the sorted container that contains students interests.
+
+We notice that assignments $$M$$ are valid matching in graph problems and we can apply [Edmond’s Algorithm](./reference-graph-problems.html#using-edmonds-algorithm) on it.
 
 # Ant Challenge 	
 
