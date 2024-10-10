@@ -126,19 +126,47 @@ We notice that assignments $$M$$ are valid matching in graph problems and we can
     Input
   </summary>
   {: .text-delta }
-
+  - 1st line of `n [space] e [space] s [space] a [space] b`
+    - no. trees
+    - no. edges
+    - no. species
+    - index of start tree
+    - index of end tree
+  - e consecutive lines of `u [space] v [space] w₀ [...] wₛ₋₁` describing edges and cost for each species
+  - 1 line of `h₀ [...] hₛ₋₁` location of hives of species
 {:toc}
 </details>
-
 
 <details open markdown="block">
   <summary>
     Output
   </summary>
   {: .text-delta }
-
+single line containing total cost on the optimal route fulfilling the private network constraint
 {:toc}
 </details>
+
+## Problem Modeling
+
+The graph construction for the undirected, weighted graph $$G = (V, E)$$ is defined by the task already. By task description, the graph itself represents a forest, with vertices being the trees and an edge is established between two trees if there is a path that connects them.
+
+### Construction of Subgraphs
+
+The concept of a "private network" is introduced and leads to subgraphs $$G_{i} := (V_i, E_i), i \in \{0, ..., s-1\}, V_i = V, E_i ⊆ E$$ one can construct from $$G$$, where $$s$$ is an integer number denoting the number of species.
+
+For a species $$i$$, one can construct the "private network" with a greedy algorithm where one starts from some node (hive of the species) with index `h[i]`. At each iteration, some node $$q$$ from the set of unvisited neighboring nodes of the current node $$p$$ will be visted, such that $$\{ p, q \}$$ has the lowest weight. The iteration ends until $$\lvert V_i \rvert = \lvert V \rvert$$, when all vertices are covered in the subgraph.
+
+We notice that it is describing Prim's algorithm for finding the minimum spanning tree (MST). Since all weights are unique, we can also use Kruskal's algorithm to find the MST, which is more suitable for sparse graphs.
+
+### Construction of the Shortest Path
+
+The shortest path algorithm should run on the union of subgraphs $$⋃_{i} G_{i}$$, one can see that the found shortest path should be some set of edges fulfulling $$P ⊆ ⋃_{i} E_{i}$$
+
+
+### Notes
+- Current algorithm as described. Kruskal failed the last case -> why?
+- under which conditions do Krusal and Prims return the same tree?
+- performance
 
 # Important Bridges
 
