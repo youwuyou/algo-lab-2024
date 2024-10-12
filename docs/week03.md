@@ -164,11 +164,12 @@ The shortest path algorithm should run on the union of subgraphs $$⋃_{i} G_{i}
 
 
 {: .warning}
-  For every edge there are `s` possible weights, but not all of them can be used!
+  For every edge there are `s` possible weights, but not all of them can be used! Only those that belong to some edge in some $$G_{i}$$ can be chosen. Using the minimum out of all possible weights on an edge blindly is wrong.
 
- Only those that belong to some edge in some $$G_{i}$$ can be chosen. Using the minimum out of all possible weights on an edge blindly is wrong.
 
- In the following example, we see that the edge $$\{0,2\}$$ is not part of the MST of the ladybug species, even though the weight of it is 3, which is lower than the weight that ant gives.
+
+In the following example, we see that the edge $$\{0,2\}$$ is not part of the MST of the ladybug species. Consider the situation, where `a = 0` and `b = 2`, then the shortest path that fulfills the "private network" requirements should be $$P = \{ \{0, 1\}, \{ 1, 2 \} \}$$, and the total sum of such path is 3. Note that the following edge belongs to the union of the MST edges too. $$\{ 0, 2\} ⊆ ⋃_{i} E_{i}$$, and if looking at all possible weights on it, we see that ladybugs need only 3 unit time, while the ants need 4 unit time. However, it cannot get the weight of 3 from ladybug species, because it is not part of the MST of ladybug.
+
 
 
 <img src="assets/images/ant_challenge_mst.png" width="50%" class="center">
