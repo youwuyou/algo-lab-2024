@@ -160,13 +160,19 @@ We notice that it is describing Prim's algorithm for finding the minimum spannin
 
 ### Construction of the Shortest Path
 
-The shortest path algorithm should run on the union of subgraphs $$⋃_{i} G_{i}$$, one can see that the found shortest path should be some set of edges fulfulling $$P ⊆ ⋃_{i} E_{i}$$
+The shortest path algorithm should run on the union of subgraphs $$⋃_{i} G_{i}$$, where the weights on the edges are chosen from the minimum from all possible edge values. One can see that the found shortest path should be some set of edges fulfulling $$P ⊆ ⋃_{i} E_{i}$$
 
 
-### Notes
-- Current algorithm as described. Kruskal failed the last case -> why?
-- under which conditions do Krusal and Prims return the same tree?
-- performance
+{: .warning}
+  For every edge there are `s` possible weights, but not all of them can be used!
+
+ Only those that belong to some edge in some $$G_{i}$$ can be chosen. Using the minimum out of all possible weights on an edge blindly is wrong.
+
+ In the following example, we see that the edge $$\{0,2\}$$ is not part of the MST of the ladybug species, even though the weight of it is 3, which is lower than the weight that ant gives.
+
+
+<img src="assets/images/ant_challenge_mst.png" width="50%" class="center">
+
 
 # Important Bridges
 
