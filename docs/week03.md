@@ -175,14 +175,33 @@ In the following example, we see that the edge $$\{0,2\}$$ is not part of the MS
 <img src="assets/images/ant_challenge_mst.png" width="50%" class="center">
 
 
+## Solution Technique
+
+The solution process boils down to
+1. Construct subgraphs $$G_{i}$$
+2. Construct the union of subgraphs $$⋃_{i} G_{i}$$ with best weights
+3. Run Dijkstra on the union of subgraphs with best weights
+
+To construct subgraphs $$G_{i}$$, which boils down to just constructing $$E_{i}$$, we iterate through all species $$i \in \{0,..., s-1\}$$, retrieve the weights of the current species from a prestored weight matrix, and find the MST with the [Kruskal's Algorithm](./reference-graph-problems.html#using-kruskals-algorithm). At every iteration, we also compare the cost of the edges that belong to the MST with previous values in order to keep track of the best weights. 
+
+During the construction of subgraphs, we stored the best weights for the MST edges in a `std::map<edge_desc, int>` that we can now use for the construction of the union of subgraphs with best weights by iterating through it.
+
+After $$⋃_{i} G_{i}$$ is constructed using edges of type `edge_desc` from the map, and the best weights after all iterations, we can easily find the optimal transport cost from `a` to `b` with [Dijkstra's Algorithm](./reference-graph-problems.html#using-dijkstras-algorithm).
+
 # Important Bridges
+
+**Goal:** Given a fully connected, unweighted, undirected graph, find the set of edges (bridges) that consists of edges that fulfill the definition of "critical bridges".
 
 <details open markdown="block">
   <summary>
     Input
   </summary>
   {: .text-delta }
-
+  - 1st line of `n [space] m`
+    - `n` no. islands
+    - `m` no. bridges
+  - m lines of `e₁ [space] e₂`
+    - each describes indices of two islands that a bridge connects
 {:toc}
 </details>
 
@@ -192,6 +211,21 @@ In the following example, we see that the edge $$\{0,2\}$$ is not part of the MS
     Output
   </summary>
   {: .text-delta }
-
+- 1st line outputs the no. of critical bridges `k`
+- k lines of `e₁ [space] e₂` containing the island indices that the critical bridge connects (lexicographic order)
 {:toc}
 </details>
+
+## Problem Modeling
+
+From the problem statement we see that we are guaranteed to obtain a fully connected graph that consists of islands as vertices and bridges as edges that connect the islands. Since bridges are bidirectional and there are no weights to consider with, we can use an unweighted, undirected graph [`graph`](./reference-bgl.html#unweighted-undirected-graph) to model the problem.
+
+### Identify Critical Bridges
+
+By definition, we classify an edge as a **critical bridge**, as long as the act of *removing the edge* from the graph $$G$$ causes the graph to be not fully connected anymore.
+
+Putting the connectivity of the graph into the context that we are operating on an unweighted, undirected graph, the concept of [`biconnected components`](./reference-graph-problems.html#biconnected-components) shall ring a bell.
+
+Below is an example taken from BGL documentation. It depicts a fully connected graph and there are 4 biconnected components found on the graph. We notice that the biconnected component with index 3 consists of only the vertices $$A$$ and $$G$$. More importantly, the edge $$\{ A, G\}$$ fufills the property of a **critical bridge**.
+
+<img src="assets/images/biconnected.png" width="40%" class="center">
