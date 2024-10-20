@@ -261,17 +261,36 @@ A **biconnected graph** is an undirected graph that is connected, and remains co
 {: .def}
 A **biconnected component** is any maximal subgraph of $$G$$ that is biconnected.
 
-# Articulation Points
+## Articulation Points
 
 {: .def}
 An **articulation point** of an undirected graph is any vertex part of two or more biconnected components
+
+## using a variant of Tarjan's Algorithm [^1]
+- **Input:** an undirected graph $$G = (V, E)$$
+- **Output:** the number of biconnected components in $$G$$.
+
+### [`boost::biconnected_components`](https://www.boost.org/doc/libs/1_61_0/libs/graph/doc/biconnected_components.html)
+- using the unweighted, undirected graph [`graph`](./reference-bgl.html#unweighted-undirected-graph)
+
+```cpp
+#include <boost/graph/biconnected_components.hpp>
+#include <boost/property_map/property_map.hpp>
+
+// Run biconnected components algorithm on graph G
+std::map<edge_desc, int> map;
+int nbc = boost::biconnected_components(G, boost::make_assoc_property_map(map));
+```
 
 # Bipartite Graph
 {: .def}
 A graph $$G = (V,E)$$ is **bipartite** if $$V$$ can be split in two subsets $$U, V$$ such that all edges in $$E$$ have an extremity in each.
 
 
+---
 
+[^1]: 
+    [R Tarjan, Depth-first search and linear graph algorithms, SIAM journal on computing 1 (2), 146-160](https://epubs.siam.org/doi/10.1137/0201010)
 
 
 
