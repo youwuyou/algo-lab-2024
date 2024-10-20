@@ -4,7 +4,7 @@ title: Week 03
 parent: Fundamentals
 ---
 
-Week 03: 
+Week 03: Introduction to graph representations and algorithms in the BGL
 ===
 {: .no_toc }
 
