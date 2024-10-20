@@ -9,6 +9,6 @@ Exam Preparation
 ===
 
 
-Tutorial 10: How to solve problems and prepare for the exam, discussion of sample solutions
+**Week 10**: How to solve problems and prepare for the exam, discussion of sample solutions
 
-Tutorial 11-13: 3-fold problem sets (three similar but different problems to solve during the tutorial)
+**Week 11-13**: 3-fold problem sets (three similar but different problems to solve during the tutorial)

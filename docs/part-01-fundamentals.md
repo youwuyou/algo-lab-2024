@@ -8,10 +8,10 @@ nav_enabled: true
 Fundamentals
 ===
 
-Tutorial 1: Introduction to the working environment and the submission framework (online-judge) + Basics about how to program for this lab.
+**Week 01:** Introduction to the working environment and the submission framework (online-judge) + Basics about how to program for this lab.
 
-Tutorial 2: General problem solving strategies: Dynamic programming and sliding window
+**Week 02:** General problem solving strategies: Dynamic programming and sliding window
 
-Tutorial 3: Introduction to graph representations and algorithms in the BGL
+**Week 03:** Introduction to graph representations and algorithms in the BGL
 
-Tutorial 4: Introduction to geometric computing in CGAL
+**Week 04:** Introduction to geometric computing in CGAL
