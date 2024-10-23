@@ -13,7 +13,7 @@ nav_enabled: true
 | 2 | Deck of Cards | Beach Bars | Burning Coins | Defensive Line | The Great Game |
 | 3 | James Bond's Sovereigns | First steps with BGL | Buddy Selection | Ant Challenge | Important Bridges |
 | 4 | Tracking | Hit | First Hit | Antenna | Hiking Maps |
-| 5 |  | Moving Books | Asterix the Gaul | Severus Snape | Boats |
+| 5 | Motorcycles | Moving Books | Asterix the Gaul | Severus Snape | Boats |
 
 ## PoW - Problem of the Week
 
